@@ -7,6 +7,7 @@ export default defineSchema({
             userId: v.string(), // clerk user id
             email: v.string(),
             name: v.string(),
+            username: v.string(),
             isPro: v.boolean(),
             proSince: v.optional(v.number()), // date of when user became pro
             lemonSqueezyCustomerId: v.optional(v.string()), // for subscription management
