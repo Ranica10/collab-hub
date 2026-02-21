@@ -1,10 +1,11 @@
 import { currentUser } from "@clerk/nextjs/server"
 import { ConvexHttpClient } from "convex/browser";
 import { api } from "../../../../convex/_generated/api";
-import { Blocks } from "lucide-react";
+import { Blocks, Code2 } from "lucide-react";
 import Link from "next/link";
 
 // Components
+import ThemeSelector from "./ThemeSelector";
 import ProfileBtn from "./ProfileBtn";
 
 async function Header() {
@@ -47,11 +48,36 @@ async function Header() {
                         </span>
                         </div>
                     </Link>
+
+                    {/* Navigation */}
+                    <nav className="flex items-center space-x-1">
+                        <Link
+                        href="/snippets"
+                        className="relative group flex items-center gap-2 px-4 py-1.5 rounded-lg text-gray-300 bg-gray-800/50 
+                            hover:bg-blue-500/10 border border-gray-800 hover:border-blue-500/50 transition-all duration-300 shadow-lg overflow-hidden"
+                        >
+                            <div
+                                className="absolute inset-0 bg-gradient-to-r from-blue-500/10 
+                                to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity"
+                            />
+                            <Code2 className="w-4 h-4 relative z-10 group-hover:rotate-3 transition-transform" />
+                            <span
+                                className="text-sm font-medium relative z-10 group-hover:text-white
+                                transition-colors"
+                            >
+                                Code Snippets
+                            </span>
+                        </Link>
+                    </nav>
                 </div>
 
                 
                 {/* User Settings */}
                 <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-3">
+                        <ThemeSelector />
+                    </div>
+
                     {/* User Profile */}
                     <div className="pl-3 border-l border-gray-800">
                         <ProfileBtn />
