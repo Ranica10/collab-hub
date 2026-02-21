@@ -4,6 +4,9 @@ import { api } from "../../../../convex/_generated/api";
 import { Blocks } from "lucide-react";
 import Link from "next/link";
 
+// Components
+import ProfileBtn from "./ProfileBtn";
+
 async function Header() {
     const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
     // Get the current user
@@ -44,6 +47,15 @@ async function Header() {
                         </span>
                         </div>
                     </Link>
+                </div>
+
+                
+                {/* User Settings */}
+                <div className="flex items-center gap-4">
+                    {/* User Profile */}
+                    <div className="pl-3 border-l border-gray-800">
+                        <ProfileBtn />
+                    </div>
                 </div>
             </div>
         </div>
