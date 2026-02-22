@@ -7,6 +7,7 @@ import { LANGUAGE_CONFIG } from "../_constants";
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import { ChevronDownIcon, Sparkles } from "lucide-react";
+import useMounted from "@/hooks/useMounted";
 
 function LanguageSelector() {
   // State to manage the open/close state of the dropdown
@@ -36,6 +37,14 @@ function LanguageSelector() {
     setLanguage(langId); // Update the language in the store
     setIsOpen(false); // Close the dropdown after selection
   };
+
+  // State to track if the component is mounted (to avoid hydration issues)
+  const mounted = useMounted();
+
+  if (!mounted) {
+    // Return null on the server
+    return null;
+  }
 
   return (
     <div className="relative" ref={dropdownRef}>

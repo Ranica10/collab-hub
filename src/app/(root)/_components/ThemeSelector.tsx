@@ -1,8 +1,9 @@
 "use client";
-import { use, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { useCodeEditorStore } from "@/store/useCodeEditorStore";
 import { THEMES } from "../_constants";
+import useMounted from "@/hooks/useMounted";
 
 import { AnimatePresence, motion } from "framer-motion";
 import { CircleOff, Cloud, Github, Laptop, Moon, Palette, Sun } from "lucide-react";
@@ -26,9 +27,6 @@ function ThemeSelector() {
   // Ref to the dropdown element
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // State to track if the component is mounted (to avoid hydration issues)
-  const [mounted, setMounted] = useState(false);
-
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       // If the click is outside the dropdown, close it by setting isOpen to false
@@ -42,10 +40,8 @@ function ThemeSelector() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // If on the client, set mounted to true
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  // State to track if the component is mounted (to avoid hydration issues) 
+  const mounted = useMounted();
 
   if (!mounted) {
     // Return null on the server
