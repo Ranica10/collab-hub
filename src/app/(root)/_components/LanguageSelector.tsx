@@ -159,10 +159,21 @@ function LanguageSelector() {
                               />
                             )}
 
+                            {/* Active (Blue) */}
                             {language === lang.id && (
                               <Sparkles className="w-4 h-4 text-blue-400 animate-pulse" />
                             )}
 
+                            {/* Hover (White, if NOT active) */}
+                            {language !== lang.id && (
+                              <Sparkles
+                                className="
+                                  w-4 h-4 text-white
+                                  opacity-0 group-hover:opacity-100
+                                  transition-opacity duration-200
+                                "
+                              />
+                            )}
                           </button>
                         </motion.div>
                     )
