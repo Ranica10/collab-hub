@@ -1,6 +1,7 @@
 import { v } from "convex/values";
-import { mutation } from "./_generated/server";
+import { mutation, query } from "./_generated/server";
 
+// Function to sync user data from Clerk to Convex database
 export const syncUser = mutation({
     args: {
         userId: v.string(),
@@ -25,5 +26,24 @@ export const syncUser = mutation({
                 isPro: false, // default to false, can be updated later based on subscription status
             });
         }
+    }
+});
+
+// Function to get user data from Convex database based on userId
+export const getUser = query({
+    args: {
+        userId: v.string(),
+    },
+    handler: async (ctx, args) => {
+        if (!args.userId) return null; // if no userId is provided, return null
+
+        const user = await ctx.db.query("users") // query the users table
+        .withIndex("by_user_id") // query using the userId index
+        .filter(q => q.eq(q.field("userId"), args.userId)) // filter to find the user with the matching userId
+        .first(); // get the first (and should be only) result
+
+        if (!user) return null; // if no user is found, return null
+
+        return user;
     }
 })
