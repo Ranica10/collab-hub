@@ -3,16 +3,23 @@ import { useEffect, useState } from "react";
 
 import { useCodeEditorStore } from "@/store/useCodeEditorStore";
 import { defineMonacoThemes, LANGUAGE_CONFIG } from "../_constants";
+import { EditorPanelSkeleton } from "./EditorPanelSkeleton";
 
+import { useClerk } from "@clerk/nextjs";
 import { Editor } from "@monaco-editor/react";
 
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { RotateCcwIcon, ShareIcon, TypeIcon } from "lucide-react";
+import useMounted from "@/hooks/useMounted";
 
 function EditorPanel() {
-  const [isShareOpen, setIsShareOpen] = useState(false);
+  // Get the Clerk instance to check if it's loaded
+  const clerk = useClerk();
 
+  // State to manage the open/close state of the share modal
+  const [isShareOpen, setIsShareOpen] = useState(false);
+  // Get necessary state and functions from the code editor store
   const { language, theme, fontSize, editor, setFontSize, setEditor } = useCodeEditorStore();
 
   useEffect(() => {
@@ -48,6 +55,11 @@ function EditorPanel() {
   const handleFontSizeChange = (newSize: number) => {
     
   }
+
+  // State to track if the component is mounted (to avoid hydration issues)
+  const mounted = useMounted();
+  // Show skeleton while waiting for client-side rendering
+  if (!mounted) return <EditorPanelSkeleton />;
 
   return <div className="relative">
     {/* Container */}
@@ -111,7 +123,7 @@ function EditorPanel() {
 
       {/* Editor */}
       <div className="relative group rounded-xl overflow-hidden ring-1 ring-white/[0.05]">
-        <Editor
+        {clerk.loaded && <Editor
           height="600px"
           language={LANGUAGE_CONFIG[language].monacoLanguage}
           onChange={handleEditorChange}
@@ -141,7 +153,10 @@ function EditorPanel() {
               horizontalScrollbarSize: 8,
             },
           }}
-        />
+        /> }
+
+        {/* Loading skeleton */}
+        {!clerk.loaded && <EditorPanelSkeleton />}
       </div>
     </div>
   </div>
