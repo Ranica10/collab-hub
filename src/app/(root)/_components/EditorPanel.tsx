@@ -45,15 +45,33 @@ function EditorPanel() {
   }, [setFontSize]);
 
   const handleRefresh = () => {
+    // Get the default code for the current language
+    const defaultCode = LANGUAGE_CONFIG[language].defaultCode;
 
+    // Reset the editor content to the default code for the current language
+    if (editor) {
+      editor.setValue(defaultCode);
+    }
+
+    // Remove the saved code from localStorage to reset to default on next load
+    localStorage.removeItem(`editor-code-${language}`);
   }
 
-  const handleEditorChange = () => {
-
+  const handleEditorChange = (value: string | undefined) => {
+    // Check if value is defined
+    if (value) {
+      // Save the current code to localStorage whenever it changes
+      localStorage.setItem(`editor-code-${language}`, value);
+    }
   }
 
   const handleFontSizeChange = (newSize: number) => {
-    
+    // Maximum font size of 24 and minimum of 12
+    const size = Math.min(Math.max(newSize, 12), 24);
+    // Update the font size state with the new value
+    setFontSize(size);
+    // Update local storage with the new font size so that it persists across sessions
+    localStorage.setItem("editor-font-size", size.toString());
   }
 
   // State to track if the component is mounted (to avoid hydration issues)
@@ -101,7 +119,7 @@ function EditorPanel() {
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
               onClick={handleRefresh}
-              className="p-2 bg-[#1e1e2e] hover:bg-[#2a2a3a] rounded-lg ring-1 ring-white/5 transition-colors"
+              className="p-2 bg-[#1e1e2e] hover:bg-[#2a2a3a] rounded-lg ring-1 ring-white/5 transition-colors cursor-pointer"
               aria-label="Reset to default code"
             >
               <RotateCcwIcon className="size-4 text-gray-400" />
@@ -109,11 +127,11 @@ function EditorPanel() {
 
             {/* Share Button */}
             <motion.button
-              whileHover={{ scale: 1.02 }}
+              whileHover={{ scale: 1.02 }}  
               whileTap={{ scale: 0.98 }}
               onClick={() => setIsShareOpen(true)}
               className="inline-flex items-center gap-2 px-4 py-2 rounded-lg overflow-hidden bg-gradient-to-r
-               from-blue-500 to-blue-600 opacity-90 hover:opacity-100 transition-opacity"
+               from-blue-500 to-blue-600 opacity-90 hover:opacity-100 transition-opacity cursor-pointer"
             >
               <ShareIcon className="size-4 text-white" />
               <span className="text-sm font-medium text-white ">Share</span>
