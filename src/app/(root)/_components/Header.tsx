@@ -8,7 +8,7 @@ import { SignedIn } from "@clerk/nextjs";
 // Components
 import ThemeSelector from "./ThemeSelector";
 import LanguageSelector from "./LanguageSelector";
-import RunCode from "./RunCode";
+import RunCodeBtn from "./RunCodeBtn";
 import ProfileBtn from "./ProfileBtn";
 
 async function Header() {
@@ -97,9 +97,9 @@ async function Header() {
                         </Link>
                     )}
 
-                    {/* Run Code */}
+                    {/* Run Code Button */}
                     <SignedIn>
-                        <RunCode />
+                        <RunCodeBtn />
                     </SignedIn>
 
                     {/* User Profile */}
