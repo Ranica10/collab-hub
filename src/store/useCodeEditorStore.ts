@@ -84,8 +84,10 @@ export const useCodeEditorStore = create<CodeEditorState>((set, get) => {
         runCode: async () => {
             // Get the current language and code from the store
             const { language, getCode } = get();
-            const code = getCode(); 
-            
+            const code = getCode();
+
+            console.log("Code being executed:", code);
+
             // Validation: Check if the code is empty before running it
             if (!code) {
                 set({ error: "Please enter some code!!" });
@@ -96,70 +98,62 @@ export const useCodeEditorStore = create<CodeEditorState>((set, get) => {
             set({isRunning: true, error: null, output: ""});
 
             try {
-                // Get the runtime configuration for the current language
-                const runtime = LANGUAGE_CONFIG[language].pistonRuntime;
+                // Get the Judge0 language ID from the config for the current language
+                const judge0LanguageId = LANGUAGE_CONFIG[language].judge0LanguageId;
 
-                // Make a POST request to the Piston API to execute the code
-                const response = await fetch("https://emkc.org/api/v2/piston/execute", {
+                // Make a POST request to the Judge0 API to execute the code (done by a submission)
+                const response = await fetch("https://ce.judge0.com/submissions/?base64_encoded=false&wait=true", {
                     method: "POST", // HTTP method for sending data to the server
                     headers: {
-                        "Content-Type": "application/json" // Specify that the request body is in JSON format
+                    "Content-Type": "application/json", // Specify that the request body is in JSON format
                     },
                     body: JSON.stringify({
-                        language: runtime.language, // e.g. "javascript"
-                        version: runtime.version, // e.g. "18.10.0"
-                        files: [{content: code}] // The code to be executed, wrapped in an array of file objects (Piston expects this)
-                    })
-                })
+                        source_code: code, // the code to be executed
+                        language_id: judge0LanguageId, // the language ID for the code (e.g. JavaScript: 97)
+                        redirect_stderr_to_stdout: false, // keep stderr and stdout seperate
+                    }),
+                });
 
-                const data = await response.json(); // Parse the JSON response from the API
-
-                console.log("Piston API response: ", data);
-
-                // Means that there was an API level error
-                if (data.message) {
-                    // Update the error state in the store with the error message from the API response
-                    set({ error: data.message, executionResult: {code, output: "", error: data.message} });
-                    return;
-                }
+                // Parse the JSON response from the API
+                const data = await response.json(); 
+                //console.log("Judge0 API response: ", data);
 
                 // Handle compilation errors (if any)
-                if (data.compile && data.compile.code !== 0) {
-                    // If there is a compilation error, it will be in either stderr or output, so check both
-                    const error = data.compile.stderr || data.compile.output;
+                if (data.compile_output) {
+                    const error = data.compile_output;
                     console.log("Compilation error: ", error);
 
-                    set({ error, executionResult: {code, output: "", error} });
+                    set({ error, executionResult: { code, output: "", error } });
                     return;
                 }
 
                 // Handle runtime errors (if any)
-                if (data.run && data.run.code !== 0) {
-                    // If there is a compilation error, it will be in either stderr or output, so check both
-                    const error = data.run.stderr || data.run.output;
+                if (data.stderr) {
+                    const error = data.stderr;
                     console.log("Runtime error: ", error);
 
-                    set({ error, executionResult: {code, output: "", error} });
+                    set({ error, executionResult: { code, output: "", error } });
                     return;
                 }
 
                 // Handle successful execution
-                const output = data.run.output; // Get the output from the API response
-                // Update the output state in the store with the API response
+                const output = data.stdout || "";
                 set({
-                    output: output.trim(), 
+                    output: output.trim(),
                     executionResult: {
                         code,
                         output: output.trim(),
-                        error: null
-                    }
+                        error: null,
+                    },
                 });
 
             } catch (e) {
                 console.log("Error running code: ", e);
-                set({ error: "Error running code", executionResult: {code, output: "", error: "Error running code"} });
+                set({
+                error: "Error running code",
+                executionResult: { code, output: "", error: "Error running code" },
+                });
             } finally {
-                // Reset the isRunning state after code execution is complete (whether it succeeded or failed)
                 set({ isRunning: false });
             }
         }
