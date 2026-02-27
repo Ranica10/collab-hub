@@ -8,7 +8,7 @@ type LanguageConfig = Record<
     id: string;
     label: string;
     logoPath: string;
-    pistonRuntime: { language: string; version: string };
+    judge0LanguageId: number;
     monacoLanguage: string;
     defaultCode: string;
   }
@@ -19,7 +19,7 @@ export const LANGUAGE_CONFIG: LanguageConfig = {
     id: "javascript",
     label: "JavaScript",
     logoPath: "/javascript.png",
-    pistonRuntime: { language: "javascript", version: "18.15.0" }, // api
+    judge0LanguageId: 97, // api
     monacoLanguage: "javascript",
     defaultCode: `// JavaScript Playground
 console.log("Hello, World!");`,
@@ -28,7 +28,7 @@ console.log("Hello, World!");`,
     id: "typescript",
     label: "TypeScript",
     logoPath: "/typescript.png",
-    pistonRuntime: { language: "typescript", version: "5.0.3" },
+    judge0LanguageId: 74, // api
     monacoLanguage: "typescript",
     defaultCode: `// TypeScript Playground
 console.log("Hello, World!");`,
@@ -37,7 +37,7 @@ console.log("Hello, World!");`,
     id: "python",
     label: "Python",
     logoPath: "/python.png",
-    pistonRuntime: { language: "python", version: "3.10.0" },
+    judge0LanguageId: 100, // api
     monacoLanguage: "python",
     defaultCode: `# Python Playground
 print("Hello, World!")`,
@@ -46,7 +46,7 @@ print("Hello, World!")`,
     id: "java",
     label: "Java",
     logoPath: "/java.png",
-    pistonRuntime: { language: "java", version: "15.0.2" },
+    judge0LanguageId: 91, // api
     monacoLanguage: "java",
     defaultCode: `public class Main {
     public static void main(String[] args) {
@@ -58,7 +58,7 @@ print("Hello, World!")`,
     id: "go",
     label: "Go",
     logoPath: "/go.png",
-    pistonRuntime: { language: "go", version: "1.16.2" },
+    judge0LanguageId: 60, // api
     monacoLanguage: "go",
     defaultCode: `// Go Playground
 package main
@@ -73,7 +73,7 @@ func main() {
     id: "rust",
     label: "Rust",
     logoPath: "/rust.png",
-    pistonRuntime: { language: "rust", version: "1.68.2" },
+    judge0LanguageId: 73, // api
     monacoLanguage: "rust",
     defaultCode: `// Rust Playground
 fn main() {
@@ -84,7 +84,7 @@ fn main() {
     id: "cpp",
     label: "C++",
     logoPath: "/cpp.png",
-    pistonRuntime: { language: "cpp", version: "10.2.0" },
+    judge0LanguageId: 105, // api
     monacoLanguage: "cpp",
     defaultCode: ` // C++ Playground
 #include <iostream>
@@ -99,7 +99,7 @@ int main() {
     id: "csharp",
     label: "C#",
     logoPath: "/csharp.png",
-    pistonRuntime: { language: "csharp", version: "6.12.0" },
+    judge0LanguageId: 51, // api
     monacoLanguage: "csharp",
     defaultCode: `// C# Playground
 using System;
@@ -114,7 +114,7 @@ class Program {
     id: "ruby",
     label: "Ruby",
     logoPath: "/ruby.png",
-    pistonRuntime: { language: "ruby", version: "3.0.1" },
+    judge0LanguageId: 72, // api
     monacoLanguage: "ruby",
     defaultCode: `# Ruby Playground
 puts "Hello, World!"`,
@@ -123,7 +123,7 @@ puts "Hello, World!"`,
     id: "swift",
     label: "Swift",
     logoPath: "/swift.png",
-    pistonRuntime: { language: "swift", version: "5.3.3" },
+    judge0LanguageId: 83, // api
     monacoLanguage: "swift",
     defaultCode: `// Swift Playground
 print("Hello, World!")`,
