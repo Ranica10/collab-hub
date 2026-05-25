@@ -159,3 +159,6 @@ export const useCodeEditorStore = create<CodeEditorState>((set, get) => {
         }
     }
 })
+
+// gives the latest execution result from the store
+export const getExecutionResult = () => useCodeEditorStore.getState().executionResult;
