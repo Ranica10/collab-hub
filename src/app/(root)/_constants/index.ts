@@ -48,7 +48,8 @@ print("Hello, World!")`,
     logoPath: "/java.png",
     judge0LanguageId: 91, // api
     monacoLanguage: "java",
-    defaultCode: `public class Main {
+    defaultCode: `// Java Playground
+public class Main {
     public static void main(String[] args) {
         System.out.println("Hello, World!");
     }

@@ -4,6 +4,8 @@ import { useCodeEditorStore } from "@/store/useCodeEditorStore";
 import { useUser } from "@clerk/nextjs";
 import { motion } from "framer-motion";
 import { Loader2, Play } from "lucide-react";
+import { api } from "../../../../convex/_generated/api";
+import { useMutation } from "convex/react";
 
 function RunCode() {
   // Get authenticated user info from Clerk
@@ -11,8 +13,20 @@ function RunCode() {
   // Get the runCode function and other relevant state from the code editor store
   const { runCode, language, isRunning, executionResult } = useCodeEditorStore();
 
-  const handleRun = () => {
-    
+  const saveExecution = useMutation(api.codeExecutions.saveExecution);
+
+  const handleRun = async () => {
+    await runCode();
+
+    if (user && executionResult) {
+      // Save the result to convex
+      await saveExecution({
+        language,
+        code: executionResult.code,
+        output: executionResult.output || undefined,
+        error: executionResult.error || undefined,
+      });
+    }
   }
 
   return (
