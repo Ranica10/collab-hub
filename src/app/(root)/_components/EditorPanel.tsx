@@ -3,7 +3,9 @@ import { useEffect, useState } from "react";
 
 import { useCodeEditorStore } from "@/store/useCodeEditorStore";
 import { defineMonacoThemes, LANGUAGE_CONFIG } from "../_constants";
+
 import { EditorPanelSkeleton } from "./EditorPanelSkeleton";
+import ShareSnippetModal from "./ShareSnippetModal";
 
 import { useClerk } from "@clerk/nextjs";
 import { Editor } from "@monaco-editor/react";
@@ -177,6 +179,8 @@ function EditorPanel() {
         {!clerk.loaded && <EditorPanelSkeleton />}
       </div>
     </div>
+    {/* Share Snippet Modal */}
+    {isShareOpen && <ShareSnippetModal onClose={() => setIsShareOpen(false)} />}
   </div>
 }
 
