@@ -1,5 +1,5 @@
 import { ConvexError, v } from "convex/values";
-import { mutation } from "./_generated/server";
+import { mutation, query } from "./_generated/server";
 
 export const createSnippet = mutation({
     args: {
@@ -34,3 +34,14 @@ export const createSnippet = mutation({
         return snippetId;
     }
 });
+
+export const getSnippets = query({
+    handler: async (ctx) => {
+        const snippets = await ctx.db.query("snippets")
+        .order("desc") // order by creation time, newest first
+        .collect();
+
+        return snippets;
+    }
+})
+
