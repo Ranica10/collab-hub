@@ -45,3 +45,36 @@ export const getSnippets = query({
     }
 })
 
+export const isSnippetStarred = query({
+    args: {
+        snippetId: v.id("snippets") // ensure the snippetId is a valid ID for the snippets table
+    },
+
+    handler: async (ctx, args) => {
+        // Check if the user is authenticated
+        const identity = await ctx.auth.getUserIdentity();
+        if (!identity) return false; // if not authenticated, return false b/c it is not being starred by the user
+        
+        const star = await ctx.db.query("stars")
+        .withIndex("by_user_id_and_snippet_id")
+        .filter( // check if there is a star for this user and snippet
+            (q) => q.eq(q.field("userId"), identity.subject) && q.eq(q.field("snippetId"), args.snippetId) 
+        )
+        .first();
+
+        return !!star; // return true if a star is found, false otherwise
+    }
+})
+
+export const getSnippetStarCount = query({
+  args: { snippetId: v.id("snippets") },
+  handler: async (ctx, args) => {
+    const stars = await ctx.db
+      .query("stars")
+      .withIndex("by_snippet_id")
+      .filter((q) => q.eq(q.field("snippetId"), args.snippetId))
+      .collect();
+
+    return stars.length;
+  },
+});
